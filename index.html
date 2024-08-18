@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="src/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
+</head>
+<body>
+
+    <!-- Contenedor del toast -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <div class="weather-app">
+        <header class="header">
+            <h1>Weather</h1>
+            <div class="search-box">
+                <input type="text" id="countryInput" placeholder="Ingresa ciudad o pais...">
+                <button id="searchBtn">Buscar</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="location">
+                <h2 id="country"></h2>
+            </div>
+            <div class="current-weather">
+                <i id="icon" class="wi"></i>
+                <div class="temperature" id="temp"></div>
+                <div class="description" id="weather"></div>
+            </div>
+            <div class="weather-details">
+                <div class="detail" id="humedad"></div>
+                <div class="detail" id="viento"></div>
+                <div class="detail" id="presion"></div>
+            </div>
+        </main>
+    </div>
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>
