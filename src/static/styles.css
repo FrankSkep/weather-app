@@ -195,9 +195,18 @@ body {
 }
 
 /* Estilos para dispositivos móviles */
+
 @media (max-width: 600px) {
+    body {
+        font-size: 14px; /* Ajusta el tamaño de fuente base si es necesario */
+    }
+
     .weather-app {
         width: 85%;
+        max-height: 90vh; /* Limita la altura máxima */
+        overflow-y: auto; /* Agrega una barra de desplazamiento si el contenido es demasiado largo */
+        padding: 15px; /* Reduce el padding */
+        margin: 10px auto; /* Ajusta el margen para móviles */
     }
 
     .search-box {
@@ -228,12 +237,12 @@ body {
         margin: 5px 0;
     }
 
-    .current-weather .wi {
-        font-size: 70px;
+    .current-weather img {
+        width: 100px; /* Ajusta el tamaño de la imagen */
     }
 
     .temperature {
-        font-size: 42px;
+        font-size: 40px; /* Ajusta el tamaño de la fuente */
     }
 
     .description {
@@ -241,12 +250,17 @@ body {
     }
 
     .current-day h2 {
-        font-size: 22px;
+        font-size: 20px; /* Ajusta el tamaño de la fuente */
+    }
+
+    .forecast-container {
+        overflow-x: auto;
+        padding: 0 10px; /* Ajusta el espaciado */
+        scroll-snap-type: x mandatory; /* Habilita el ajuste automático en el desplazamiento horizontal */
     }
 
     .forecast-card {
-        width: 150px;
-        /* Ajusta el ancho de las tarjetas en dispositivos móviles */
+        width: 150px; /* Ajusta el ancho de las tarjetas en dispositivos móviles */
         margin-right: 10px;
     }
 
