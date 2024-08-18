@@ -90,15 +90,9 @@ body {
     margin-bottom: 25px;
 }
 
-.current-weather .wi {
-    font-size: 80px; 
-    color: #666;
+.current-weather img {
+    width: 100px;
     margin: 15px;
-    transition: color 0.3s ease;
-}
-
-.current-weather .wi:hover {
-    color: #166cec;
 }
 
 .temperature {

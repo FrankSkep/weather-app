@@ -17,11 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
     countryDisplay: document.getElementById('country'),
     tempDisplay: document.getElementById('temp'),
     weatherDisplay: document.getElementById('weather'),
-    iconDisplay: document.getElementById('icon'),
+    imageIcon : document.querySelector('.current-weather img'),
     humidityDisplay: document.getElementById('humedad'),
     pressureDisplay: document.getElementById('presion'),
     windDisplay: document.getElementById('viento'),
-    dayDisplay: document.getElementById('dia'),
+    dayDisplay: document.getElementById('day'),
   };
 
   elements.searchBtn.addEventListener('click', () => {
@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       localStorage.setItem('country', country);
       const data = await response.json();
+      console.log(data)
       showResults(data);
     } catch (error) {
       showToast(error.message, 'error');
@@ -58,10 +59,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const dayOfWeek = daysOfWeek[date.getDay()]; // Obtener el día de la semana
 
-    elements.countryDisplay.innerHTML = `${name} | ${dayOfWeek}`;
+    elements.countryDisplay.innerHTML += name;
+    elements.dayDisplay.innerHTML = dayOfWeek;
     elements.tempDisplay.innerHTML = `${main.temp}°C`;
     elements.weatherDisplay.innerHTML = weather[0].description;
-    elements.iconDisplay.className = `wi ${weatherIcons[weather[0].icon]}`;
+
+    switch(weather[0].main) {
+      case 'Clear':
+          elements.imageIcon.src = 'src/static/images/clear.png';
+          break;
+
+      case 'Rain':
+          elements.imageIcon.src = 'src/static/images/rain.png';
+          break;
+
+      case 'Snow':
+          elements.imageIcon.src = 'src/static/images/snow.png';
+          break;
+
+      case 'Clouds':
+          elements.imageIcon.src = 'src/static/images/cloud.png';
+          break;
+
+      case 'Haze':
+          elements.imageIcon.src = 'src/static/images/mist.png';
+          break;
+
+      default:
+          elements.imageIcon.src = '';
+    }
     elements.humidityDisplay.innerHTML = `Humedad: ${main.humidity}%`;
     elements.pressureDisplay.innerHTML = `Presión: ${main.pressure} hPa`;
     elements.windDisplay.innerHTML = `Viento: ${wind.speed} m/s`;
