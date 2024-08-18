@@ -3,7 +3,7 @@ import { weatherIcons } from './components/weatherIcons.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather';
-    const API_KEY = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
+    const API_KEY = '908c46b1dc97d4a73ad4500cde35d4c1';
     const DEFAULT_COUNTRY = 'Ensenada';
 
   // Obtener ultima ciudad buscada
