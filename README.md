@@ -1,12 +1,12 @@
 # Weather App
 
-Aplicación web del clima desarrollada con JavaScript puro, utilizando la API de OpenWeatherMap para obtener y mostrar información meteorológica de cualquier ciudad que el usuario ingrese.
+Sencilla aplicación web del clima, desarrollada con JavaScript puro, utilizando la API de OpenWeatherMap para obtener y mostrar información meteorológica de cualquier ciudad que el usuario ingrese.
 
 ## Características
 
 - Buscar el clima por ciudad o país.
 - Mostrar información detallada del clima, incluyendo temperatura, humedad, presión y velocidad del viento.
-- Recuerda la ultima ciudad buscada
+- Recordar la ultima ciudad buscada
 - Iconos de clima dinámicos.
 - Notificaciones (toasts) para mensajes de error y advertencias.
 
