@@ -15,20 +15,23 @@
 
     <div class="weather-app">
         <header class="header">
-            <h1 id="country"><i class="fa fa-map-marker-alt"></i>  </h1>
+            <div class="location">
+                <i class="fa fa-map-marker-alt fa-xl"></i>
+                <h1 id="country"></h1>
+            </div>
             <div class="search-box">
-                <input type="text" id="countryInput" placeholder="Ingresa ciudad o pais...">
+                <input type="text" id="countryInput" placeholder="Ingresa ciudad o país...">
                 <button id="searchBtn">Buscar</button>
             </div>
         </header>
-
+    
         <main class="main-content">
-            <div class="location">
+            <div class="current-day">
                 <h2 id="day"></h2>
             </div>
             <div class="current-weather">
-                <img src="">
-                <div class="temperature" id="temp"></div>   
+                <img id="current-icon" src="" alt="Ícono del clima actual">
+                <div class="temperature" id="temp"></div>
                 <div class="description" id="weather"></div>
             </div>
             <div class="weather-details">
@@ -37,7 +40,15 @@
                 <div class="detail" id="presion"></div>
             </div>
         </main>
+    
+        <div class="forecast">
+            <h3>Pronóstico próximos 5 días</h3>
+            <div class="forecast-container">
+                <!-- Aqui iran tarjetas dinamicas de cada dia -->
+            </div>
+        </div>
     </div>
+    
     <script type="module" src="src/main.js"></script>
 </body>
 </html>
