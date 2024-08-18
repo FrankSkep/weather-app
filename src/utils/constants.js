@@ -13,8 +13,8 @@ const DAYS_OF_WEEK = [
 ];
 
 export const constants = {
-    DAYS_OF_WEEK,
     WEATHER_API_URL,
     API_KEY,
     DEFAULT_COUNTRY,
+    DAYS_OF_WEEK
 };
