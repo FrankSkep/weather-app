@@ -1,13 +1,10 @@
 import { showToast } from './utils/toast.js';
 import { getWeatherIcon } from './utils/weatherIcon.js';
+import { constants } from './utils/constants.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/forecast';
-    const API_KEY = '908c46b1dc97d4a73ad4500cde35d4c1';
-    const DEFAULT_COUNTRY = 'Ensenada';
-
     // Obtener ultima ciudad buscada
-    const country = localStorage.getItem('country') || DEFAULT_COUNTRY;
+    const country = localStorage.getItem('country') || constants.DEFAULT_COUNTRY;
     getWeather(country);
 
     // DOM Elements
@@ -25,27 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
         forecastContainer: document.querySelector('.forecast-container'),
     };
 
-    elements.searchBtn.addEventListener('click', () => {
-        const country = elements.countryInput.value.trim();
-        if (country) {
-            getWeather(country);
-        } else {
-            showToast('Por favor ingrese una ciudad', 'warning');
-        }
-    });
-
-    elements.countryInput.addEventListener('keypress', function (event) {
-        if (event.key === 'Enter') {
-            event.preventDefault(); // Evita el comportamiento predeterminado del Enter
-            searchBtn.click(); // Simula un clic en el botón de búsqueda
-        }
-    });
-
     // Obtiene el clima de una ciudad
     async function getWeather(country) {
         try {
             const response = await fetch(
-                `${WEATHER_API_URL}?q=${country}&appid=${API_KEY}&units=metric&lang=es`
+                `${constants.WEATHER_API_URL}?q=${country}&appid=${constants.API_KEY}&units=metric&lang=es`
             );
             if (!response.ok) {
                 throw new Error(`No se encontró la ciudad: ${country}`);
@@ -69,16 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const { main, weather, wind, dt } = currentWeather;
 
         const date = new Date(dt * 1000);
-        const daysOfWeek = [
-            'Domingo',
-            'Lunes',
-            'Martes',
-            'Miércoles',
-            'Jueves',
-            'Viernes',
-            'Sábado',
-        ];
-        const dayOfWeek = daysOfWeek[date.getDay()];
+
+        const dayOfWeek = constants.DAYS_OF_WEEK[date.getDay()];
 
         elements.countryDisplay.innerHTML = city.name;
         elements.dayDisplay.innerHTML = dayOfWeek;
@@ -93,60 +66,43 @@ document.addEventListener('DOMContentLoaded', () => {
         updateForecast(list);
     }
 
-    // Funcion para mostrar el pronostico de 5 dias
     function updateForecast(forecastData) {
         elements.forecastContainer.innerHTML = ''; // Limpiar el contenido actual
 
-        // Crear un objeto para almacenar el pronóstico diario
-        const dailyForecast = {};
-
-        // Definir los días de la semana
-        const daysOfWeek = [
-            'Domingo',
-            'Lunes',
-            'Martes',
-            'Miércoles',
-            'Jueves',
-            'Viernes',
-            'Sábado',
-        ];
-
-        // Obtener la fecha actual
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // Establecer la hora a medianoche
-        const todayString = today.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-
-        // Iterar sobre los datos del pronóstico
-        forecastData.forEach((item) => {
+        // Agrupar los datos del pronóstico diario usando reduce
+        const dailyForecast = forecastData.reduce((acc, item) => {
             const date = new Date(item.dt * 1000);
             const dayString = date.toISOString().split('T')[0]; // Fecha en formato YYYY-MM-DD
+            const temp = item.main.temp;
+            const weather = item.weather[0].main;
+            const description = item.weather[0].description;
+            const dayName = date.getDay();
 
-            // Agrupar los datos por día
-            if (!dailyForecast[dayString]) {
-                dailyForecast[dayString] = {
-                    temp: item.main.temp, // Tomar la temperatura del primer registro del día
-                    weather: item.weather[0].main,
-                    description: item.weather[0].description,
-                    dayName: date.getDay(), // Obtener el nombre del día de la semana
-                    count: 1, // Contador para promediar
+            if (!acc[dayString]) {
+                acc[dayString] = {
+                    temp: temp,
+                    weather: weather,
+                    description: description,
+                    dayName: dayName,
+                    count: 1,
                 };
             } else {
-                dailyForecast[dayString].temp += item.main.temp; // Acumular la temperatura
-                dailyForecast[dayString].count += 1; // Incrementar el contador
+                acc[dayString].temp = (
+                    (acc[dayString].temp * acc[dayString].count + temp) /
+                    (acc[dayString].count + 1)
+                ).toFixed(1);
+                acc[dayString].count += 1;
             }
-        });
 
-        // Promediar las temperaturas
-        Object.keys(dailyForecast).forEach((day) => {
-            dailyForecast[day].temp = (
-                dailyForecast[day].temp / dailyForecast[day].count
-            ).toFixed(1);
-        });
+            return acc;
+        }, {});
 
         // Crear tarjetas para los próximos 5 días
         const sortedDays = Object.keys(dailyForecast)
-            .sort((a, b) => new Date(a) - new Date(b)) // Ordenar por fecha
-            .slice(1, 6); // Obtener los primeros 5 días
+            .sort((a, b) => new Date(a) - new Date(b))
+            .slice(1, 5);
+
+        const fragment = document.createDocumentFragment();
 
         sortedDays.forEach((day) => {
             const dayData = dailyForecast[day];
@@ -154,32 +110,47 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement('div');
             card.className = 'forecast-card';
 
-            // Crear y agregar el día
             const dayElement = document.createElement('div');
             dayElement.className = 'forecast-day';
-            dayElement.textContent = daysOfWeek[dayData.dayName];
+            dayElement.textContent = constants.DAYS_OF_WEEK[dayData.dayName];
             card.appendChild(dayElement);
 
-            // Crear y agregar el ícono del clima
             const icon = document.createElement('img');
             icon.src = getWeatherIcon(dayData.weather);
             icon.alt = 'Ícono del clima';
             card.appendChild(icon);
 
-            // Crear y agregar la temperatura
             const tempElement = document.createElement('div');
             tempElement.className = 'forecast-temp';
             tempElement.textContent = `${dayData.temp}°C`;
             card.appendChild(tempElement);
 
-            // Crear y agregar descripcion
             const descriptionElement = document.createElement('div');
             descriptionElement.className = 'forecast-description';
             descriptionElement.textContent = dayData.description;
             card.appendChild(descriptionElement);
 
-            // Agregar la tarjeta al contenedor
-            elements.forecastContainer.appendChild(card);
+            fragment.appendChild(card);
         });
+
+        elements.forecastContainer.appendChild(fragment);
     }
+
+    // Evento para buscar el clima de una ciudad
+    elements.searchBtn.addEventListener('click', () => {
+        const country = elements.countryInput.value.trim();
+        if (country) {
+            getWeather(country);
+        } else {
+            showToast('Por favor ingrese una ciudad', 'warning');
+        }
+    });
+
+    // Evento para buscar el clima de una ciudad al presionar Enter
+    elements.countryInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Evita el comportamiento predeterminado del Enter
+            searchBtn.click(); // Simula un clic en el botón de búsqueda
+        }
+    });
 });
