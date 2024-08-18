@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     humidityDisplay: document.getElementById('humedad'),
     pressureDisplay: document.getElementById('presion'),
     windDisplay: document.getElementById('viento'),
+    dayDisplay: document.getElementById('dia'),
   };
 
   elements.searchBtn.addEventListener('click', () => {
@@ -52,8 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Muestra los resultados en el DOM
   function showResults(data) {
-    const { name, main, weather, wind } = data;
-    elements.countryDisplay.innerHTML = name;
+    const { name, main, weather, wind, dt } = data;
+    const date = new Date(dt * 1000); // Convertir marca de tiempo Unix a Date
+    const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const dayOfWeek = daysOfWeek[date.getDay()]; // Obtener el día de la semana
+
+    elements.countryDisplay.innerHTML = `${name} | ${dayOfWeek}`;
     elements.tempDisplay.innerHTML = `${main.temp}°C`;
     elements.weatherDisplay.innerHTML = weather[0].description;
     elements.iconDisplay.className = `wi ${weatherIcons[weather[0].icon]}`;
